@@ -21,7 +21,13 @@ import {
     Link2Icon,
     ImageIcon,
     UploadIcon,
-    SearchIcon
+    SearchIcon,
+    AlignLeftIcon,
+    AlignCenterIcon,
+    AlignRightIcon,
+    AlignJustifyIcon,
+    ListIcon,
+    ListOrderedIcon
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -41,6 +47,103 @@ import { Dialog,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+
+const ListButton = () => {
+    const { editor } = useEditorStore();
+
+    const lists = [
+        {
+            label: "Lista com marcadores",
+            icon: ListIcon,
+            isActive: () => editor?.isActive("bulletList"),
+            onClick: () => editor?.chain().focus().toggleBulletList().run(),
+        },
+        {
+            label: "Lista numerada",
+            icon: ListOrderedIcon,
+            isActive: () => editor?.isActive("orderedList"),
+            onClick: () => editor?.chain().focus().toggleOrderedList().run(),
+        },
+    ];
+
+    return (
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <button
+                    className="h-7 min-w-7 shrink-0 flex flex-col items-center justify-center rounded-sm hover:bg-neutral-200/80 px-1.5 overflow-hidden text-sm" 
+                >
+                    <ListIcon className="size-4"/>
+                </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="p-1 flex flex-col gap-y-1">
+                {lists.map(({ label, icon: Icon, onClick, isActive }) => (
+                    <button
+                        key={label}
+                        onClick={onClick}
+                        className={cn("flex item-center gap-x-2 px-2 py-1 rounded-sm hover:bg-neutral-200/80",
+                        isActive() && "bg-neutral-200/80"
+                        )}
+                    >
+                        <Icon className="size-4"/>
+                        <span className="text-sm">{label}</span>
+                    </button>
+                ))} 
+            </DropdownMenuContent>
+        </DropdownMenu>
+    );
+}
+
+const AlignButton = () => {
+    const { editor } = useEditorStore();
+
+    const alignments = [
+        {
+            label: "Alinhar à esquerda",
+            value: "left",
+            icon: AlignLeftIcon,
+        },
+        {
+            label: "Alinhar ao centro",
+            value: "center",
+            icon: AlignCenterIcon,
+        },
+        {
+            label: "Alinhar à direita",
+            value: "right",
+            icon: AlignRightIcon,
+        },
+        {
+            label: "Justificar",
+            value: "justify",
+            icon: AlignJustifyIcon,
+        },
+    ]
+
+    return (
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <button
+                    className="h-7 min-w-7 shrink-0 flex flex-col items-center justify-center rounded-sm hover:bg-neutral-200/80 px-1.5 overflow-hidden text-sm" 
+                >
+                    <AlignLeftIcon className="size-4"/>
+                </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="p-1 flex flex-col gap-y-1">
+                {alignments.map(({ label, value, icon: Icon }) => (
+                    <button
+                        key={value}
+                        onClick={() => editor?.chain().focus().setTextAlign(value).run()}
+                        className={cn("flex item-center gap-x-2 px-2 py-1 rounded-sm hover:bg-neutral-200/80",
+                        editor?.isActive({ TextAlign: value } && "bg-neutral-200/80"))}
+                    >
+                        <Icon className="size-4"/>
+                        <span className="text-sm">{label}</span>
+                    </button>
+                ))} 
+            </DropdownMenuContent>
+        </DropdownMenu>
+    );
+}
 
 const ImageButton = () => {
     const { editor } = useEditorStore();
@@ -442,9 +545,9 @@ export const Toolbar = () => {
             <Separator orientation="vertical" className="h-6 bg-neutral-300" />
             <LinkButton />
             <ImageButton />
-            {/* Todo: Align */}
+            <AlignButton />
             {/* Todo: Line height */}
-            {/* Todo: List */}
+            <ListButton />
             {sections[2].map((item) => (
                 <ToolbarButton key={item.label} {...item} />
             ))}
