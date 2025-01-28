@@ -23,8 +23,8 @@ const Home = () => {
         <TemplatesGallery />
         <DocumentsTable
           documents={results}
-          status={status}
           loadMore={loadMore}
+          status={status}
         />
       </div>
     </div>
