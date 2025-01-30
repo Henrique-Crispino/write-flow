@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useMutation } from "convex/react";
 import { useState } from "react";
+import { toast } from "sonner";
 
 import { cn } from "@/lib/utils";
 import {
@@ -25,7 +26,9 @@ export const TemplatesGallery = () => {
     const onTemplateClick = async (title: string, initialContent: string) => {
         setIsCreating(true);
         create({ title, initialContent })
+            .catch(() => toast.error("Algo deu errado!"))
             .then((documentId) => {
+                toast.success("Documento criado com sucesso!");
                 router.push(`/documents/${documentId}`);
             })
             .finally(() => {
