@@ -1,6 +1,4 @@
 import { Extension } from "@tiptap/react";
-import { types } from "util";
-
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
     lineHeight: {
