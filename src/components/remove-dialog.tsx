@@ -51,7 +51,12 @@ export const RemoveDialog =({ documentId, children }: RemoveDialogProps) => {
                             setIsRemoving(true);
                             remove({ id: documentId})
                                 .catch(() => toast.error("Algo deu errado!"))
-                                .then(() => toast.success("Documento removido com sucesso!"))
+                                .then(() => {
+                                    if (window.location.pathname !== "/") {
+                                        window.location.href = "/";
+                                    }
+                                    toast.success("Documento removido com sucesso!");
+                                })
                                 .finally(() => setIsRemoving(false));
                         }}
                     >
